@@ -1,0 +1,48 @@
+# create pipeline with some name 
+name: eddy app containerization pipeline 
+# Trigger -- when this pipeline should start
+on:
+  push:
+    branches:
+      - "main"
+
+# jobs for performing operatiosn 
+jobs:
+  eddy-image-build:
+    runs-on: ubuntu-latest
+    # this server will be provision by github backen for this job
+    steps:
+      - name: run some basic commands on above server to do some verify 
+        run: |
+          uname -r 
+          whoami
+          cat /etc/os-release 
+          docker version 
+          docker-compose version 
+      - name: using pre-desing github workflow to get copy gitrepo code to runners machine 
+        uses: actions/checkout@v4 
+
+      - name: verify github code and use docker compose to build and create 
+        run: |
+          ls  -a 
+          docker-compose  up -d  
+          sleep 2 
+          docker-compose ps 
+      - name: verify health check page by access it usign postman / curl 
+        run: |
+          echo  "access health.html page using curl "
+          curl -f  http://localhost:1234/health.html
+          # here we will get http response code 200 
+
+      - name: try to login from runner to docker hub account 
+        uses: docker/login-action@v3 
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: rebuild image in docker hub format and push it to docker hub
+        run: |
+          echo "this is home work for guys "
+          echo "plz find some action workflow "
+          echo "build image in docker hub format and push also " 
+        
